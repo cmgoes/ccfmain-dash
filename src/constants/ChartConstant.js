@@ -173,7 +173,7 @@ export const apexPieChartDefaultOption = {
 	}
 }
 
-export const apexSparklineChartDefultOption = {
+export const apexSparklineChartDefaultOption = {
 	chart: {
 		type: 'line',
 		sparkline: {
@@ -201,5 +201,45 @@ export const apexSparklineChartDefultOption = {
 		marker: {
 		  show: false
 		}
+	}
+}
+
+export const apexCandlestickChartDefaultOption = {
+	chart: {
+		type: 'candlestick',
+		toolbar: {
+			show: false
+		}
+	},
+	xaxis: {
+		type: 'datetime',
+		labels: {
+			show: false
+		},
+		axisBorder: {
+			show: false
+		},
+		axisTicks: {
+			show: false
+		},
+		crosshairs: {
+			show: false
+		},
+		tooltip: {
+			formatter: function (value) {
+				let month = ((new Date(value).getMonth() + 1) < 10 ? "0" : "") + (new Date(value).getMonth() + 1);
+				let date = ((new Date(value).getDate()) < 10 ? "0" : "") + new Date(value).getDate();
+				let hour = new Date(value).getHours();
+				let minute = new Date(value).getMinutes();
+				let second = new Date(value).getSeconds();
+				return month + "-" + date + " " + hour + ":" + minute + ":" + second
+			}
+		}
+	},
+	yaxis: {
+		show: false,
+	},
+	grid: {
+		show: false
 	}
 }

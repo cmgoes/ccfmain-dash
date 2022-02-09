@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Card, Avatar, Dropdown, Table, Menu, Tag, Modal } from 'antd';
-import utils from 'utils';
+import { Row, Col, Card, Avatar, Table } from 'antd';
 import axios from 'axios';
 import ChainModal from 'components/shared-components/ChainModal';
-
-const Web3 = require('web3');
-const tokenAddress = "0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82";
-const apiKey = "2Vdnspvyim8Zw8LdNKuVE6oZI6p51Oece8lKmvXk";
 
 const walletColumns = [
   {
@@ -262,7 +257,7 @@ const PortfolioPane = (props) => {
   }, [walletInfo])
   return (
     <>
-      <Row gutter={16, 0}>
+      <Row gutter={16}>
         <Col span={24}>
           <Card>
             <div className="d-flex align-items-center mb-4">

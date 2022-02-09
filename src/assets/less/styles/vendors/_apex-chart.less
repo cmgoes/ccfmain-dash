@@ -1,9 +1,9 @@
 .apexcharts-tooltip {
-    box-shadow: rgb(174, 174, 174) 0px 0px 10px !important;
+    box-shadow: @apex-chart-card-shadow!important;
 
     &.apexcharts-theme-light {
         border: 0 !important;
-        background: rgb(255, 255, 255) !important;
+        background: @component-background !important;
 
         .apexcharts-tooltip-title {
             background: transparent !important;
@@ -43,18 +43,18 @@
 }
 
 .apexcharts-xaxistooltip {
-    opacity: 0;
-    padding: 9px 10px;
-    pointer-events: none;
-    color: #373d3f;
-    font-size: 13px;
-    text-align: center;
-    border-radius: 2px;
-    position: absolute;
-    z-index: 10;
-    background: #ECEFF1;
-    border: 1px solid #90A4AE;
-    transition: 0.15s ease all;
+    color: @text-color!important;
+    border-radius: 4px!important;
+    background: @apex-chart-tooltip-background-color!important;
+    border-color: @apex-chart-tooltip-border-color!important;
+
+    &::before {
+        border-bottom-color: @apex-chart-tooltip-border-color!important;
+    }
+
+    &:after {
+        border-bottom-color: @apex-chart-tooltip-background-color!important;
+    }
 }
 
 .apexcharts-legend-text {

@@ -6,7 +6,7 @@ import Flex from 'components/shared-components/Flex'
 import ChartWidget from 'components/shared-components/ChartWidget';
 import NumberFormat from 'react-number-format';
 import ApexChart from "react-apexcharts";
-import { apexSparklineChartDefultOption, COLORS } from 'constants/ChartConstant';
+import { apexSparklineChartDefaultOption, COLORS } from 'constants/ChartConstant';
 import utils from 'utils'
 import {
   FacebookFilled,
@@ -154,7 +154,7 @@ export const AnalyticDashboard = () => {
                   </div>
                   <div className="d-flex align-items-center">
                     <ApexChart 
-                      options={{...apexSparklineChartDefultOption, ...{colors: [utils.getSignNum(item.percentage, COLORS[1], COLORS[2])]}}} 
+                      options={{...apexSparklineChartDefaultOption, ...{colors: [utils.getSignNum(item.percentage, COLORS[1], COLORS[2])]}}} 
                       series={item.data} 
                       height={25} 
                       width={50}

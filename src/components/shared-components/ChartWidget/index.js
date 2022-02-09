@@ -5,20 +5,22 @@ import ApexChart from "react-apexcharts";
 import {
 	apexLineChartDefaultOption,
 	apexBarChartDefaultOption,
-	apexAreaChartDefaultOption
+	apexAreaChartDefaultOption,
+	apexCandlestickChartDefaultOption
 } from 'constants/ChartConstant';
 import ReactResizeDetector from 'react-resize-detector';
 import { DIR_RTL } from 'constants/ThemeConstant';
 
 const titleStyle = {
 	position: 'absolute',
-	zIndex: '1'
+	zIndex: '1',
+	top: '0'
 }
 
 const extraStyle = {
 	position: 'absolute',
 	zIndex: '1',
-	top: '25px'
+	top: '28px'
 }
 
 const getChartTypeDefaultOption = type => {
@@ -29,8 +31,10 @@ const getChartTypeDefaultOption = type => {
 			return apexBarChartDefaultOption
 		case 'area':
 			return apexAreaChartDefaultOption
+		case 'candlestick':
+			return apexCandlestickChartDefaultOption
 		default:
-			return apexLineChartDefaultOption;
+			return apexCandlestickChartDefaultOption;
 	}
 }
 
@@ -62,7 +66,6 @@ const ChartWidget = ({ title, series, width, height, xAxis, customOptions, card,
 	const extraRef = useRef(null);
 	const chartRef = useRef();
 
-	options.xaxis.categories = xAxis
 	if (customOptions) {
 		options = { ...options, ...customOptions }
 	}
@@ -76,7 +79,7 @@ const ChartWidget = ({ title, series, width, height, xAxis, customOptions, card,
 	const renderChart = () => (
 		<ReactResizeDetector onResize={onResize()}>
 			<div style={direction === DIR_RTL ? { direction: 'ltr' } : {}} className="chartRef" ref={chartRef}>
-				<ApexChart options={options} type={type} series={series} width={width} height={height} />
+				<ApexChart options={options} series={series} type="candlestick" width={width} height={height} />
 			</div>
 		</ReactResizeDetector>
 	)
@@ -85,7 +88,7 @@ const ChartWidget = ({ title, series, width, height, xAxis, customOptions, card,
 		<>
 			{card ?
 				<Card >
-					<div className={`position-relative ${bodyClass}`}>
+					<div className={`position-relative pt-5 ${bodyClass}`}>
 						{<div style={!isMobile ? titleStyle : {}}>{title}</div> && <h4 className="font-weight-bold" style={!isMobile ? titleStyle : {}}>{title}</h4>}
 						{extra && <div ref={extraRef} style={!isMobile ? extraStyle : {}}><h1>{extra}</h1></div>}
 						{renderChart()}
@@ -122,10 +125,17 @@ ChartWidget.propTypes = {
 
 ChartWidget.defaultProps = {
 	series: [],
-	height: 300,
+	height: 400,
 	width: '100%',
 	card: true,
-	type: 'line'
+	type: 'candlestick'
 };
 
 export default ChartWidget
+
+
+
+
+
+          
+	

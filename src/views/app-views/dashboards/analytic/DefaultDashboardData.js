@@ -1,28 +1,12 @@
 export const VisitorChartData = {
-	series: [
+	series: [{
+		data: [
 		{
-			name: "Price Chart",
-			data: [35, 41, 62, 42, 13, 18, 29, 25, 31, 15]
-		},
-		{
-			name: "Market Cap",
-			data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			x: new Date(0),
+			y: [0, 0, 0, 0]
 		}
-	],
-	categories: [
-		'01 Jan',
-		'02 Feb',
-		'03 Mar',
-		'04 Apr',
-		'05 May',
-		'06 Jun',
-		'07 Jul',
-		'08 Aug',
-		'09 Sep',
-		'10 Oct',
-		'11 Nov',
-		'12 Dec'
-	]
+		]
+	}]
 }
 
 export const AnnualStatisticData = [

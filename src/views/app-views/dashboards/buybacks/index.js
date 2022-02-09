@@ -1,28 +1,9 @@
-import React, { useState, useEffect} from "react";
-import { Row, Col, Button, Card, Avatar, Dropdown, Table, Menu, Tag } from 'antd';
+import React, { useState } from "react";
+import { Row, Col, Card, Table } from 'antd';
 import StatisticWidget from 'components/shared-components/StatisticWidget';
 import { BuybackStatisticData, BuybackTransactionData } from './BuybackData';
-import { 
-  UserAddOutlined, 
-  FileExcelOutlined, 
-  PrinterOutlined, 
-  PlusOutlined, 
-  EllipsisOutlined, 
-  StopOutlined, 
-  ReloadOutlined 
-} from '@ant-design/icons';
-import utils from 'utils';
 import {withRouter} from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
-
-const cardDropdown = (menu) => (
-  <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
-    <a href="/#" className="text-gray font-size-lg" onClick={e => e.preventDefault()}>
-      <EllipsisOutlined />
-    </a>
-  </Dropdown>
-)
 
 const tableColumns = [
   {
@@ -74,6 +55,7 @@ export const BuybackDashboard = () => {
   BuybackTransactionData.map((item) => {
     sumUsd += Number(item.usd);
     console.log(item.usd + '------');
+    return null;
   })
   let avergeUsd = (sumUsd/buybacks).toLocaleString();
 
@@ -88,7 +70,7 @@ export const BuybackDashboard = () => {
                 <Col xs={16} sm={16} md={16} lg={16} xl={8} key={i}>
                   <StatisticWidget 
                     title={elm.title} 
-                    value={(i == 0 ) ? "# " + buybacks : (i == 1) ? "$ " + sumUsd.toLocaleString() : "$ " + avergeUsd}
+                    value={(i === 0 ) ? "# " + buybacks : (i === 1) ? "$ " + sumUsd.toLocaleString() : "$ " + avergeUsd}
                     status={elm.status}
                     subtitle={elm.subtitle}
                   />
@@ -96,7 +78,7 @@ export const BuybackDashboard = () => {
               ))
             }
           </Row>
-          <Row gutter={16,0}>
+          <Row gutter={16}>
             <Col span={24}>
                 <Card title="Buyback transaction ledger">
                   <Table 

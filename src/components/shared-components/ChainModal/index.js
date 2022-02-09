@@ -1,8 +1,6 @@
 import React from 'react'
-import { Row, Col, Button, Card, Avatar, Dropdown, Table, Menu, Tag, Modal } from 'antd';
+import { Avatar } from 'antd';
 import PropTypes from "prop-types";
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import Icon from '@ant-design/icons/lib/components/Icon';
 
 const ChainModal = ({ name, icon, balance, sizeAvatar, className}) => {
     console.log('23232-------------')

@@ -209,7 +209,7 @@ const PortfolioPane = (props) => {
     <>
 
 
-      <Row gutter={16, 0}>
+      <Row gutter={16}>
         <Col span={24}>
           <Card>
             <div className="d-flex align-items-center mb-4">

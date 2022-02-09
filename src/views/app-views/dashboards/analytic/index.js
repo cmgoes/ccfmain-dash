@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Button, Card, Avatar, Dropdown, Table, Menu, Tag } from 'antd';
+import { Row, Col, Card, Avatar, Dropdown, Table, Menu } from 'antd';
 import StatisticWidget from 'components/shared-components/StatisticWidget';
 import ChartWidget from 'components/shared-components/ChartWidget';
-import AvatarStatus from 'components/shared-components/AvatarStatus';
-import GoalWidget from 'components/shared-components/GoalWidget';
 import {
   VisitorChartData,
   AnnualStatisticData,
-  ActiveMembersData,
-  NewMembersData,
-  RecentTransactionData
 } from './DefaultDashboardData';
 import ApexChart from "react-apexcharts";
 import { apexLineChartDefaultOption, COLOR_2 } from 'constants/ChartConstant';
@@ -27,47 +22,11 @@ import { withRouter } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import ccfTokenAbi from './abi/ccf-abi';
+import ccfWbnbLpTokenAbi from './abi/ccf-bnb-abi'
 const Web3 = require('web3');
 const tokenAddress = "0x7f9528b913A99989B88104b633D531241591A358";
+const lptokenAddress = "0x83a0962aE816604a6b162a5E054912982C8e4C1C";
 const deadAddress = "0x000000000000000000000000000000000000dead";
-
-
-const MembersChart = props => (
-  <ApexChart {...props} />
-)
-
-const memberChartOption = {
-  ...apexLineChartDefaultOption,
-  ...{
-    chart: {
-      sparkline: {
-        enabled: true,
-      }
-    },
-    colors: [COLOR_2],
-  }
-}
-
-const newJoinMemberOption = (
-  <Menu>
-    <Menu.Item key="0">
-      <span>
-        <div className="d-flex align-items-center">
-          <PlusOutlined />
-          <span className="ml-2">Add all</span>
-        </div>
-      </span>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <span>
-        <div className="d-flex align-items-center">
-          <StopOutlined />
-          <span className="ml-2">Disable all</span>
-        </div>
-      </span>
-    </Menu.Item>
-  </Menu>
-)
 
 const latestTransactionOption = (
   <Menu>
@@ -131,8 +90,11 @@ const tableColumns = [
 export const DefaultDashboard = () => {
   const [visitorChartData] = useState(VisitorChartData);
   const [annualStatisticData] = useState(AnnualStatisticData);
-  let [manualburntToken, setburntToken] = useState();
-  let [recentTransactionData, setrecentTransactionData] = useState();
+  const [manualburntToken, setburntToken] = useState();
+  const [lpTokenAmount, setLpTokenAmount] = useState();
+  const [series, setSeries] = useState(VisitorChartData.series);
+  const [lpTokenTotalSupply, setLpTokenTotalSupply] = useState();
+  const [recentTransactionData , setrecentTransactionData] = useState();
   const { direction } = useSelector(state => state.theme)
 
   const params = {
@@ -156,24 +118,22 @@ export const DefaultDashboard = () => {
     await axios.get("https://api.coingecko.com/api/v3/coins/markets", { params },
       { headers: { "Access-Control-Allow-Origin": 'http://localhost:3000' } })
       .then(res => {
-
         pancakeswap_price = res.data[0].current_price;
         volumePerDay = res.data[0].total_volume;
-        liquidity = 152614;
+        // liquidity = 152614;
         holders = 3712;
         total_supply = res.data[0].total_supply;
         marketcapFull = pancakeswap_price * total_supply;
         ath = res.data[0].ath;
-
-        burntToken = max_supply - total_supply + manualburntToken / 10 ** 9;
-        circulatingSupply = total_supply - burntToken
-
+        burntToken = max_supply - total_supply + manualburntToken;
+        circulatingSupply = total_supply - burntToken;
+        liquidity = 2 * lpTokenAmount * pancakeswap_price / lpTokenTotalSupply;
         setToken({ max_supply: max_supply, circulatingSupply: circulatingSupply, burntToken: burntToken, pancakeswap_price: pancakeswap_price, volumePerDay: volumePerDay, liquidity: liquidity, holders: holders, marketcapFull: marketcapFull, ath: ath });
         setrecentTransactionData([
           {
             id: '#5327',
             name: 'Total supply',
-            date: Number(max_supply).toLocaleString(),
+            date: Number(total_supply).toLocaleString(),
             avatarColor: '#fa8c16'
           },
           {
@@ -236,39 +196,75 @@ export const DefaultDashboard = () => {
       });
   };
 
-  const getBalance = async () => {
+  const getccfTokenData = async () => {
     const provider = new Web3(window.web3.currentProvider);
-    var ccfContract = new provider.eth.Contract(ccfTokenAbi, tokenAddress);
-    console.log(ccfContract);
-    ccfContract.methods.balanceOf(deadAddress).call().then(res => {
-      setburntToken(res);
-    }).catch(err => {
-
-      console.log(err);
-    });
-
+    const ccfContract = new provider.eth.Contract(ccfTokenAbi, tokenAddress);
+    const burntAmount = (await ccfContract.methods.balanceOf(deadAddress).call())  / 10 ** 9;
+    const lpAmount = (await ccfContract.methods.balanceOf(lptokenAddress).call()) / 10 ** 9;
+    setLpTokenAmount(lpAmount);
+    setburntToken(burntAmount);
   };
 
-
+  const getLpData = async () => {
+    const provider = new Web3(window.web3.currentProvider);
+    const lpContract = new provider.eth.Contract(ccfWbnbLpTokenAbi, lptokenAddress);
+    const lpTotalSupply = (await lpContract.methods.totalSupply().call()) / Math.pow(10, 18);
+    setLpTokenTotalSupply(lpTotalSupply);
+  }
+  
+  const getPriceData = async () => {
+    await axios.get(`https://api.coingecko.com/api/v3/coins/cross-chain-farming/market_chart?vs_currency=usd&days=1&interval=1s`,
+    { headers: { "Access-Control-Allow-Origin": 'http://localhost:3000' } })
+    .then(res => {
+      const pricesData = res.data.prices.filter((_, index) => index % 10 === 9).map((price, key) => {
+        let openPrice = res.data.prices[key * 10][1];
+        let highPrice = res.data.prices[key * 10][1];
+        let lowPrice = res.data.prices[key * 10][1];
+        let closePrice = res.data.prices[key * 10 + 9][1];
+        for (let i = 0; i <= 9; i++) {
+          if (highPrice < res.data.prices[key * 10 + i][1]) {
+            highPrice = res.data.prices[key * 10 + i][1];
+          }
+          if (lowPrice > res.data.prices[key * 10 + i][1]) {
+            lowPrice = res.data.prices[key * 10 + i][1];
+          }
+        }
+        return {
+          x: new Date(price[0]),
+          y: [openPrice, highPrice, lowPrice, closePrice]
+        }
+      })
+      setSeries([{
+        data: pricesData
+      }])
+    })
+    .catch(err => {
+      console.log(err + "first--------------------------");
+    });
+  }
 
   useEffect(() => {
-    getBalance();
+    getccfTokenData();
+    getLpData();
     getData();
+    getPriceData();
     setInterval(() => {
-      getBalance();
+      getccfTokenData();
+      getLpData();
       getData();
+      getPriceData();
     }, MINUTE_MS);
 
   }, [manualburntToken]);
 
   return (
     <>
-      <Row gutter={16} padding>
+      <Row gutter={16} padding="true">
         <Col xs={32} sm={32} md={32} lg={24}>
           <Row gutter={40}>
             {
               annualStatisticData.map((elm, i) => (
-                <Col xs={16} sm={16} md={16} lg={16} xl={8} key={i}>
+                <Col xs={24} sm={24} md={24} lg={16} xl={8} key={i}>
                   <StatisticWidget
                     title={elm.title}
                     value={(i == 0 && token.circulatingSupply != undefined) ? "$ " + (token.circulatingSupply * token.pancakeswap_price).toLocaleString() :
@@ -281,14 +277,14 @@ export const DefaultDashboard = () => {
               ))
             }
           </Row>
-          <Row gutter={16, 0}>
+          <Row gutter={16}>
             <Col span={24}>
               <ChartWidget
                 title="$CCF Metrics"
                 extra={'$ ' + token.pancakeswap_price}
-                series={visitorChartData.series}
-                xAxis={visitorChartData.categories}
-                height={'400px'}
+                series={series}
+                height={400}
+                type="candlestick"
                 direction={direction}
               ></ChartWidget>
               <Card title="Token Information" extra={cardDropdown(latestTransactionOption)}>
