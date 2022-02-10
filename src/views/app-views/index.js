@@ -9,7 +9,7 @@ export const AppViews = () => {
       <Switch>
         <Route path={`${APP_PREFIX_PATH}/dashboards`} component={lazy(() => import(`./dashboards`))} />
         <Route path={`${APP_PREFIX_PATH}/farming`} component={lazy(() => import(`./farming`))} />
-        <Route path={`${APP_PREFIX_PATH}/spotasset`} component={lazy(() => import(`./spot`))} />
+        {/* <Route path={`${APP_PREFIX_PATH}/spotasset`} component={lazy(() => import(`./spot`))} /> */}
         <Route path={`${APP_PREFIX_PATH}/links`} component={lazy(() => import(`./links`))} />
 
         <Redirect from={`${APP_PREFIX_PATH}`} to={`${APP_PREFIX_PATH}/dashboards`} />

@@ -94,7 +94,7 @@ export const DefaultDashboard = () => {
   const [lpTokenAmount, setLpTokenAmount] = useState();
   const [series, setSeries] = useState(VisitorChartData.series);
   const [lpTokenTotalSupply, setLpTokenTotalSupply] = useState();
-  const [recentTransactionData , setrecentTransactionData] = useState();
+  const [recentTransactionData , setrecentTransactionData] = useState([]);
   const { direction } = useSelector(state => state.theme)
 
   const params = {
@@ -287,7 +287,7 @@ export const DefaultDashboard = () => {
                 type="candlestick"
                 direction={direction}
               ></ChartWidget>
-              <Card title="Token Information" extra={cardDropdown(latestTransactionOption)}>
+              {/* <Card title="Token Information" extra={cardDropdown(latestTransactionOption)}>
                 <Table
                   className="no-border-last"
                   columns={tableColumns}
@@ -295,8 +295,20 @@ export const DefaultDashboard = () => {
                   rowKey='id'
                   pagination={false}
                 />
-              </Card>
+              </Card> */}
             </Col>
+          </Row>
+          <Row gutter={40}>
+            {
+              recentTransactionData.map((elm, i) => (
+                <Col xs={24} sm={24} md={24} lg={16} xl={8} key={i}>
+                  <StatisticWidget
+                    title={elm.name}
+                    value={elm.date}
+                  />
+                </Col>
+              ))
+            }
           </Row>
         </Col>
       </Row>

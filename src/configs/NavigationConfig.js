@@ -49,14 +49,14 @@ const dashBoardNavTree = [{
       breadcrumb: true,
       submenu: []
     },
-    {
-      key: 'dashboard-buybacks',
-      path: `${APP_PREFIX_PATH}/dashboards/buybacks`,
-      title: 'sidenav.dashboard.buybacks',
-      icon: ShoppingCartOutlined,
-      breadcrumb: true,
-      submenu: []
-    },
+    // {
+    //   key: 'dashboard-buybacks',
+    //   path: `${APP_PREFIX_PATH}/dashboards/buybacks`,
+    //   title: 'sidenav.dashboard.buybacks',
+    //   icon: ShoppingCartOutlined,
+    //   breadcrumb: true,
+    //   submenu: []
+    // },
     {
       key: 'dashboard-stake',
       path: `${APP_PREFIX_PATH}/dashboards/stake`,
@@ -65,14 +65,14 @@ const dashBoardNavTree = [{
       breadcrumb: true,
       submenu: []
     },
-    {
-      key: 'dashboard-votes',
-      path: `${APP_PREFIX_PATH}/dashboards/votes`,
-      title: 'sidenav.dashboard.votes',
-      icon: LikeOutlined,
-      breadcrumb: true,
-      submenu: []
-    },
+    // {
+    //   key: 'dashboard-votes',
+    //   path: `${APP_PREFIX_PATH}/dashboards/votes`,
+    //   title: 'sidenav.dashboard.votes',
+    //   icon: LikeOutlined,
+    //   breadcrumb: true,
+    //   submenu: []
+    // },
     {
       key: 'dashboard-docs',
       path: `${APP_PREFIX_PATH}/dashboards/docs`,
@@ -132,31 +132,31 @@ const farmingNavTree = [
   }
 ]
 
-const spotassetNavTree = [{
-  key: 'spotasset',
-  path: `${APP_PREFIX_PATH}/spotasset`,
-  title: 'sidenav.spotasset',
-  icon: EyeOutlined,
-  breadcrumb: true,
-  submenu: [
-    {
-      key: 'spotasset-holdings',
-      path: `${APP_PREFIX_PATH}/spotasset/holdings`,
-      title: 'sidenav.spotasset.holdings',
-      icon: TeamOutlined,
-      breadcrumb: true,
-      submenu: []
-    },
-    {
-      key: 'spotasset-Watchlist',
-      path: `${APP_PREFIX_PATH}/spotasset/Watchlist`,
-      title: 'sidenav.spotasset.Watchlist',
-      icon: FundViewOutlined,
-      breadcrumb: true,
-      submenu: []
-    }
-  ]
-}]
+// const spotassetNavTree = [{
+//   key: 'spotasset',
+//   path: `${APP_PREFIX_PATH}/spotasset`,
+//   title: 'sidenav.spotasset',
+//   icon: EyeOutlined,
+//   breadcrumb: true,
+//   submenu: [
+//     {
+//       key: 'spotasset-holdings',
+//       path: `${APP_PREFIX_PATH}/spotasset/holdings`,
+//       title: 'sidenav.spotasset.holdings',
+//       icon: TeamOutlined,
+//       breadcrumb: true,
+//       submenu: []
+//     },
+//     {
+//       key: 'spotasset-Watchlist',
+//       path: `${APP_PREFIX_PATH}/spotasset/Watchlist`,
+//       title: 'sidenav.spotasset.Watchlist',
+//       icon: FundViewOutlined,
+//       breadcrumb: true,
+//       submenu: []
+//     }
+//   ]
+// }]
 
 const linksNavTree = [{
   key: 'links',
@@ -249,7 +249,7 @@ const linksNavTree = [{
 const navigationConfig = [
   ...dashBoardNavTree,
   ...farmingNavTree,
-  ...spotassetNavTree,
+  // ...spotassetNavTree,
   ...linksNavTree
 ]
 
