@@ -4,10 +4,13 @@ import { Drawer, Menu, Button, Dropdown } from 'antd';
 import ThemeConfigurator from './ThemeConfigurator';
 import { connect } from "react-redux";
 import axios from 'axios';
-import ccfTokenAbi from './abi/ccf-abi';
+import tokenAbi from './abi/ccf-abi';
 
 const Web3 = require('web3');
 const tokenAddress = "0x7f9528b913A99989B88104b633D531241591A358";
+const lptokenAddress = "0x83a0962aE816604a6b162a5E054912982C8e4C1C";
+const wbnbTokenAddress = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+const busdTokenAddress = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56";
 
 const NavPanel = () => {
   const [visible, setVisible] = useState(false)
@@ -30,22 +33,20 @@ const NavPanel = () => {
 		account = accounts[0];
 		return account;
   }
-  const getBalanceValue = () => {
-		const ids = "cross-chain-farming";
-		const vs_currencies = "usd";
-
-		axios.get("https://api.coingecko.com/api/v3/simple/price", { params: { "ids": ids, "vs_currencies": vs_currencies } })
-		  .then(res => {
-			setCurrentPrice(res.data[ids].usd.toString());
-		  })
-		  .catch(err => {
-	
-			console.log(err);
-		  });
-	  }
-	  const getBalance = userAddress => {
+  const getBalanceValue = async () => {
 		const provider = new Web3(window.web3.currentProvider);
-		var ccfContract = new provider.eth.Contract(ccfTokenAbi, tokenAddress);
+		const ccfContract = new provider.eth.Contract(tokenAbi, tokenAddress);
+		const wbnbContract = new provider.eth.Contract(tokenAbi, wbnbTokenAddress);
+		const busdContract = new provider.eth.Contract(tokenAbi, busdTokenAddress);
+		const ccfbalanceOfLP = (await ccfContract.methods.balanceOf(lptokenAddress).call()) / 10 ** 9;
+		const wbnbbalanceOfLP = (await wbnbContract.methods.balanceOf(lptokenAddress).call()) / 10 ** 18;
+		const priceOfBNB = (await busdContract.methods.balanceOf("0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16").call()) / (await wbnbContract.methods.balanceOf("0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16").call())
+		const ccfPrice = wbnbbalanceOfLP / ccfbalanceOfLP * priceOfBNB
+		setCurrentPrice(ccfPrice)
+	}
+	const getBalance = userAddress => {
+		const provider = new Web3(window.web3.currentProvider);
+		var ccfContract = new provider.eth.Contract(tokenAbi, tokenAddress);
 	
 		ccfContract.methods.balanceOf(userAddress).call().then(res => {
 	
@@ -54,17 +55,15 @@ const NavPanel = () => {
 	
 		  console.log(err);
 		});
-  };
-  const initWallet = async () => {
+  	};
+  	const initWallet = async () => {
 		await getAccount().then(res => {
-	
-		  const _currentAccount = res;
-	
-		  setCurrentAccountAddress(_currentAccount);
-		  getBalance(_currentAccount);
-		  getBalanceValue();
+			const _currentAccount = res;
+			setCurrentAccountAddress(_currentAccount);
+			getBalance(_currentAccount);
+			getBalanceValue();
 		}).catch(err => {
-		  console.log(err);
+		  	console.log(err);
 		});
   }
   const clickConnectWallet = () => {
